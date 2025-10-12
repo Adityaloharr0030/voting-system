@@ -1,0 +1,30 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "admin",
+      "email": "admin@example.com",
+      "password": "$2a$10$gaq8livC52vzACU4LfeVaemFnfD0ghwvoxLFF/cnvQQfPZHfDlzOm",
+      "role": "admin",
+      "hasVoted": false
+    }
+  ],
+  "candidates": [
+    {
+      "id": "1",
+      "name": "Alice",
+      "party": "Blue"
+    },
+    {
+      "id": "2",
+      "name": "Bob",
+      "party": "Green"
+    },
+    {
+      "id": "3",
+      "name": "Carol",
+      "party": "Independent"
+    }
+  ],
+  "votes": []
+}

@@ -1,0 +1,82 @@
+/* Import Roboto for better typography */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+:root{
+	--bg: #f8f9fa;
+	--card: #ffffff;
+	--muted: #6c757d;
+	--primary: #0d6efd; /* bootstrap primary */
+	--accent: #47b6ff;
+}
+
+html,body{height:100%;}
+body {
+	font-family: 'Roboto', Arial, sans-serif;
+	background: var(--bg);
+	color: #212529;
+	-webkit-font-smoothing:antialiased;
+	-moz-osx-font-smoothing:grayscale;
+}
+
+/* Focused inputs */
+.form-control:focus {
+	border-color: var(--accent);
+	box-shadow: 0 0 0 0.2rem rgba(71,182,255,.15);
+}
+
+#notification { margin-bottom: 1rem; }
+
+/* Header */
+header.h3 {
+	margin: 0;
+}
+
+/* Card tweaks to give slight elevation */
+.card {
+	background: var(--card);
+	border: 0;
+	border-radius: .6rem;
+	box-shadow: 0 6px 18px rgba(23,23,23,0.06);
+}
+
+.card h4 { margin-top: 0; margin-bottom: .75rem; }
+
+/* Candidate list */
+.list-group-item {
+	border: 0;
+	border-radius: .4rem;
+	margin-bottom: .5rem;
+	padding: .75rem 1rem;
+}
+
+.list-group-item strong { display:block; font-weight:600; }
+.list-group-item .text-muted { font-size: .85rem; }
+
+/* Buttons */
+.btn-primary {
+	background: linear-gradient(180deg, var(--primary), #0b5ed7);
+	border: none;
+}
+.btn-primary:active, .btn-primary:focus { box-shadow: 0 6px 18px rgba(13,110,253,0.14); }
+
+.btn-success {
+	background: linear-gradient(180deg, #28a745, #218838);
+	border: none;
+}
+
+/* Badges */
+.badge.bg-primary { background-color: var(--primary); }
+
+/* Small screens adjustments */
+@media (max-width: 768px) {
+	main.container { padding: 0 10px; }
+	.row { gap: 1rem; }
+}
+
+/* Utility spacing tweaks */
+.mb-4 { margin-bottom: 1.5rem !important; }
+.mb-3 { margin-bottom: 1rem !important; }
+.me-2 { margin-right: .5rem !important; }
+
+/* Notification container styling */
+#notification .alert { border-radius: .5rem; }
