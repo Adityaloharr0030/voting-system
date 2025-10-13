@@ -4,5 +4,13 @@ import VotingApp from './VotingApp'
 // Load project-level stylesheet from the project root so Vite serves it correctly
 import '/stl.css'
 
-const root = createRoot(document.getElementById('root'))
-root.render(<VotingApp />)
+const container = document.getElementById('root')
+if (!container) {
+  throw new Error('Failed to find the root element')
+}
+const root = createRoot(container)
+root.render(
+  <React.StrictMode>
+    <VotingApp />
+  </React.StrictMode>
+)

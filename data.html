@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VoteHub — Data Viewer</title>
+  <link rel="stylesheet" href="stl.css" />
+  <style>
+    .data-section { margin-bottom: 2rem; }
+    pre { background: #222; color: #fff; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+  </style>
+</head>
+<body class="bg-900">
+  <main class="site-main">
+    <div class="auth-card max-w-4xl mx-auto">
+      <h2 class="text-3xl font-bold mb-4 text-center bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent animate-gradient-flow bg-300%">Voting System Data</h2>
+      <div class="data-section">
+        <h3>Users</h3>
+        <pre id="users"></pre>
+      </div>
+      <div class="data-section">
+        <h3>Candidates</h3>
+        <pre id="candidates"></pre>
+      </div>
+      <div class="data-section">
+        <h3>Votes</h3>
+        <pre id="votes"></pre>
+      </div>
+      <button class="btn-secondary mt-4" onclick="location.reload()">Refresh</button>
+    </div>
+  </main>
+  <script>
+    async function fetchData() {
+      const db = await fetch('/api/results').then(r => r.json());
+      const candidates = await fetch('/api/voting/candidates').then(r => r.json());
+      // Try to get users and votes from a custom endpoint (if available)
+      let users = [], votes = [];
+      try {
+        const res = await fetch('/api/debug/db');
+        const data = await res.json();
+        users = data.users || [];
+        votes = data.votes || [];
+      } catch {
+        users = [{ error: 'Debug endpoint not available' }];
+        votes = [{ error: 'Debug endpoint not available' }];
+      }
+      document.getElementById('users').textContent = JSON.stringify(users, null, 2);
+      document.getElementById('candidates').textContent = JSON.stringify(candidates, null, 2);
+      document.getElementById('votes').textContent = JSON.stringify(votes, null, 2);
+    }
+    fetchData();
+  </script>
+</body>
+</html>

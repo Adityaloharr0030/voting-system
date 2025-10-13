@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VoteHub — Auto Seeder</title>
+  <link rel="stylesheet" href="stl.css" />
+</head>
+<body>
+  <main class="site-main text-center">
+    <h3 class="mb-6">Auto Seeder</h3>
+    <p class="muted">This page will seed demo data and then redirect you to the login page.</p>
+    <p class="muted">If nothing happens, open the DevTools Console to view errors.</p>
+  </main>
+
+  <script type="module">
+    import('./seed.js')
+      .then(() => {
+        // give the seeder a short moment and then redirect
+        setTimeout(() => { window.location = 'login.html'; }, 600);
+      })
+      .catch(err => {
+        console.error('Seeding failed', err);
+        alert('Seeding failed — check console for details');
+      });
+  </script>
+</body>
+</html>

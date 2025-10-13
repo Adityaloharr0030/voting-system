@@ -14,6 +14,12 @@ const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret'
 app.use(cors())
 app.use(express.json())
 
+// Simple request logger to help debug static file requests
+app.use((req, res, next) => {
+  console.log(new Date().toISOString(), req.method, req.url);
+  next();
+});
+
 // Simple file-backed DB (server/db.json)
 const DB_FILE = path.join(__dirname, 'db.json')
 function readDb() {
@@ -129,4 +135,21 @@ app.post('/api/admin/candidates', authMiddleware, async (req, res) => {
   res.json({ success: true, candidate: cand })
 })
 
-app.listen(port, () => console.log(`Backend running on http://localhost:${port}`))
+
+
+// Debug endpoint for raw DB data (for data.html)
+app.get('/api/debug/db', (req, res) => {
+  const db = readDb();
+  res.json(db);
+});
+
+
+// Serve static files from project root
+app.use(express.static(path.join(__dirname, '..')));
+
+// Redirect root URL to login page
+app.get('/', (req, res) => {
+  res.redirect('/login.html');
+});
+
+app.listen(port, '0.0.0.0', () => console.log(`Backend running on http://0.0.0.0:${port} (http://localhost:${port})`))

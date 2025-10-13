@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VoteHub — Register</title>
+  <link rel="stylesheet" href="stl.css" />
+</head>
+<body class="bg-900">
+  <main class="site-main">
+    <div class="auth-card max-w-4xl mx-auto">
+      <h2 class="text-3xl font-bold mb-4 text-center bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent animate-gradient-flow bg-300%">Register for VoteHub</h2>
+      <form id="registerForm" aria-label="Register Form" class="space-y-6">
+        <input class="form-input" type="text" id="name" placeholder="Name" required />
+        <input class="form-input" type="email" id="email" placeholder="Email" required />
+        <input class="form-input" type="password" id="password" placeholder="Password" required />
+        <button class="btn-secondary w-full" type="submit" id="registerBtn">Register</button>
+        <div id="errorBanner" class="notification error" style="display:none"></div>
+      </form>
+      <div class="mt-4 text-center">
+        <a href="login.html" class="btn-primary">Login</a>
+      </div>
+    </div>
+  </main>
+  <script>
+    function getItem(key, fallback) {
+      try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
+    }
+    function setItem(key, val) {
+      try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
+    }
+    function hash(str) {
+      let h = 0; for (let i = 0; i < str.length; i++) h = ((h<<5)-h)+str.charCodeAt(i); return h.toString();
+    }
+    function normalize(str) { return str.trim().toLowerCase(); }
+    function register({ name, email, password }) {
+      const users = getItem('LS_USERS', []);
+      if (users.some(u => normalize(u.email) === normalize(email))) return { error: 'Email already registered' };
+      const id = Date.now().toString();
+      const user = { id, name, email: normalize(email), passwordHash: hash(password), hasVoted: false };
+      users.push(user); setItem('LS_USERS', users);
+      setItem('LS_SESSION', { userId: id, createdAt: Date.now() });
+      return { user };
+    }
+    const form = document.getElementById('registerForm');
+    const errorBanner = document.getElementById('errorBanner');
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      form.registerBtn.disabled = true;
+      errorBanner.style.display = 'none';
+      const name = form.name.value;
+      const email = form.email.value;
+      const password = form.password.value;
+      const result = register({ name, email, password });
+      if (result.error) {
+        errorBanner.textContent = result.error;
+        errorBanner.style.display = 'block';
+        form.registerBtn.disabled = false;
+      } else {
+        window.location = 'index.html';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VoteHub — Results</title>
+  <link rel="stylesheet" href="stl.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-900">
+  <main class="site-main">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold mb-4 bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent animate-gradient-flow bg-300%">Live Results</h2>
+      <p class="text-xl muted animate-pulse-gentle">Real-time voting results</p>
+    </div>
+    <div class="auth-card">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-2xl font-semibold"><i class="fas fa-chart-bar me-2 text-green-400"></i>Vote Count</h3>
+        <div class="results-timestamp" id="results-last-updated">Last updated: <span id="lastUpdated">Never</span></div>
+      </div>
+      <canvas id="resultsChart" style="max-width:600px;max-height:320px;margin:auto;display:block;"></canvas>
+      <div class="results-list" id="results-list"></div>
+      <div class="mt-4 text-center"><a href="index.html" class="btn-primary">Back to Vote</a></div>
+    </div>
+  </main>
+  <script>
+    function getItem(key, fallback) {
+      try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
+    }
+    function getResults() {
+      const candidates = getItem('LS_CANDIDATES', []);
+      const votes = getItem('LS_VOTES', []);
+      const counts = candidates.map(c => ({
+        name: c.name,
+        count: votes.filter(v => v.candidateId === c.id).length
+      }));
+      return counts;
+    }
+    function updateResultsChart(counts) {
+      const ctx = document.getElementById('resultsChart').getContext('2d');
+      if (window.resultsChartInstance) window.resultsChartInstance.destroy();
+      window.resultsChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: counts.map(c => c.name),
+          datasets: [{ label: 'Votes', data: counts.map(c => c.count), backgroundColor: '#47b6ff', borderRadius: 8 }]
+        },
+        options: {
+          plugins: {
+            legend: { display: true, labels: { color: '#eaf4ff', font: { size: 16 } } }
+          },
+          scales: {
+            x: { ticks: { color: '#eaf4ff', font: { size: 14 } }, grid: { color: 'rgba(255,255,255,0.08)' } },
+            y: { ticks: { color: '#eaf4ff', font: { size: 14 } }, grid: { color: 'rgba(255,255,255,0.08)' } }
+          }
+        }
+      });
+    }
+    function renderResultsList(counts) {
+      const list = document.getElementById('results-list');
+      list.innerHTML = '';
+      counts.forEach(c => {
+        const row = document.createElement('div');
+        row.className = 'result-row';
+        row.innerHTML = `<div class='result-meta'><strong>${c.name}</strong></div>
+          <div class='result-bar-wrap'><div class='result-bar' style='width:${c.count * 30 + 10}px'></div></div>
+          <div class='muted' style='min-width:40px;text-align:right;'>${c.count}</div>`;
+        list.appendChild(row);
+      });
+    }
+    function updateResults() {
+      const counts = getResults();
+      updateResultsChart(counts);
+      renderResultsList(counts);
+      document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+    }
+    updateResults();
+    setInterval(updateResults, 5000);
+  </script>
+</body>
+</html>
