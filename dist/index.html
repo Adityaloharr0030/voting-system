@@ -2,26 +2,175 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>VoteHub — Vote</title>
-  <link rel="stylesheet" crossorigin href="/assets/index-DzjcxguX.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoteHub — Cast Your Vote</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .page-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+    .header-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1.5rem;
+      background: linear-gradient(135deg, #3b82f6, #7c3aed);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 35px rgba(59,130,246,0.3);
+      animation: pulseGentle 2s ease-in-out infinite;
+    }
+    .page-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #3b82f6, #7c3aed, #ec4899);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 0.75rem;
+      animation: gradientFlow 3s ease infinite;
+      background-size: 200% 200%;
+    }
+    .page-subtitle {
+      color: #9aa4b2;
+      font-size: 1.1rem;
+    }
+    .voting-card {
+      background: var(--card);
+      border-radius: 1.25rem;
+      padding: 2rem;
+      border: 1px solid rgba(255,255,255,0.04);
+      box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #eef2f7;
+    }
+    .action-bar {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .btn-with-icon {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+    }
+    .vote-success-message {
+      background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(6,182,212,0.1));
+      border: 1px solid rgba(16,185,129,0.3);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      animation: slideUp 0.5s ease;
+    }
+    .vote-success-message h3 {
+      color: #10b981;
+      font-size: 1.3rem;
+      margin: 0 0 0.5rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .vote-success-message p {
+      color: #9aa4b2;
+      margin: 0;
+    }
+    .enhanced-vote-btn {
+      margin-top: 0.75rem;
+      width: 100%;
+      padding: 0.65rem;
+      background: linear-gradient(90deg, #3b82f6, #7c3aed);
+      color: white;
+      border: none;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .enhanced-vote-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(59,130,246,0.3);
+    }
+    .enhanced-vote-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+  <link rel="stylesheet" crossorigin href="/assets/index-D4jZR053.css">
 </head>
 <body class="bg-900">
   <main class="site-main">
-    <div class="text-center mb-12">
-      <h2 class="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent animate-gradient-flow bg-300%">Choose Your Candidate</h2>
-      <p class="text-xl muted">Select a candidate to cast your vote</p>
-    </div>
-    <div class="auth-card">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="text-2xl font-semibold"><i class="fas fa-users me-2 text-blue-400"></i>Candidates</h3>
-        <button id="refresh-candidates" class="btn-primary">Refresh</button>
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="header-icon">
+        <i data-lucide="vote" style="width: 40px; height: 40px; color: white;"></i>
       </div>
+      <h1 class="page-title">Cast Your Vote</h1>
+      <p class="page-subtitle">Select your preferred candidate and make your voice heard</p>
+    </div>
+
+    <!-- Voting Card -->
+    <div class="voting-card max-w-4xl mx-auto">
+      <div class="section-header">
+        <div class="section-title">
+          <i data-lucide="users" style="width: 28px; height: 28px; color: #3b82f6;"></i>
+          <span>Available Candidates</span>
+        </div>
+        <button id="refresh-candidates" class="btn-primary" style="padding: 0.6rem 1rem; font-size: 0.9rem;">
+          <i data-lucide="refresh-cw" style="width: 16px; height: 16px;"></i>
+          Refresh
+        </button>
+      </div>
+
+      <div id="vote-success" style="display: none;"></div>
       <div id="candidate-grid" class="candidate-grid"></div>
-      <div id="notification" class="mt-4"></div>
-      <div class="flex items-center justify-between mt-6">
-        <a href="results.html" class="btn-secondary">View Results</a>
-        <a href="admin.html" class="btn-primary">Admin Panel</a>
-        <button class="btn-secondary" id="logoutBtn">Logout</button>
+      <div id="notification"></div>
+
+      <!-- Action Bar -->
+      <div class="action-bar">
+        <a href="results.html" class="btn-secondary btn-with-icon">
+          <i data-lucide="bar-chart-3" style="width: 18px; height: 18px;"></i>
+          View Results
+        </a>
+        <a href="admin-dashboard.html" class="btn-primary btn-with-icon">
+          <i data-lucide="layout-dashboard" style="width: 18px; height: 18px;"></i>
+          Admin Dashboard
+        </a>
+        <a href="admin-api.html" class="btn-secondary btn-with-icon">
+          <i data-lucide="settings" style="width: 18px; height: 18px;"></i>
+          Manage Candidates
+        </a>
+        <button class="btn-secondary btn-with-icon" id="logoutBtn">
+          <i data-lucide="log-out" style="width: 18px; height: 18px;"></i>
+          Logout
+        </button>
       </div>
     </div>
   </main>
@@ -51,34 +200,134 @@
     function logout() { localStorage.removeItem('LS_SESSION'); window.location = 'login.html'; }
     const candidateGrid = document.getElementById('candidate-grid');
     const notification = document.getElementById('notification');
+    const voteSuccess = document.getElementById('vote-success');
     const session = getSession();
+    
+    // Initialize Lucide icons
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+    
     if (!session) window.location = 'login.html';
+    
+    // Check if user has already voted
+    function hasUserVoted() {
+      const users = getItem('LS_USERS', []);
+      const user = users.find(u => u.id === session.userId);
+      return user ? user.hasVoted : false;
+    }
+    
     function renderCandidates() {
       candidateGrid.innerHTML = '';
       const candidates = getCandidates();
+      const userVoted = hasUserVoted();
+      
+      if (userVoted) {
+        voteSuccess.style.display = 'block';
+        voteSuccess.innerHTML = `
+          <div class="vote-success-message">
+            <h3>
+              <i data-lucide="check-circle" style="width: 28px; height: 28px;"></i>
+              Vote Successfully Cast!
+            </h3>
+            <p>Thank you for participating. Your vote has been recorded securely.</p>
+          </div>
+        `;
+        lucide.createIcons();
+      } else {
+        voteSuccess.style.display = 'none';
+      }
+      
+      if (candidates.length === 0) {
+        candidateGrid.innerHTML = `
+          <div style="text-align: center; padding: 3rem; color: #9aa4b2;">
+            <i data-lucide="inbox" style="width: 64px; height: 64px; margin: 0 auto 1rem; opacity: 0.5;"></i>
+            <p style="font-size: 1.1rem;">No candidates available yet.</p>
+            <p style="font-size: 0.9rem;">Please check back later or contact the admin.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+      
       candidates.forEach(c => {
         const card = document.createElement('div');
         card.className = 'candidate-card';
-        card.innerHTML = `<div class='candidate-avatar'>${c.name[0]}</div>
-          <div class='candidate-name'>${c.name}</div>
-          <button class='vote-btn'>Vote</button>`;
-        card.querySelector('.vote-btn').onclick = () => {
-          const result = vote(c.id);
-          if (result.error) {
-            notification.textContent = result.error;
-            notification.className = 'notification error';
-          } else {
-            notification.textContent = 'Vote recorded!';
-            notification.className = 'notification success';
-            renderCandidates();
-          }
-        };
+        card.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;">
+            <div class='candidate-avatar'>${c.name[0]}</div>
+            <div style="flex: 1;">
+              <div class='candidate-name'>${c.name}</div>
+              <div class='candidate-party' style="color: #9aa4b2; font-size: 0.9rem;">${c.party || 'Independent'}</div>
+            </div>
+          </div>
+          <button class='enhanced-vote-btn' ${userVoted ? 'disabled' : ''}>
+            <i data-lucide="${userVoted ? 'check' : 'check-circle'}" style="width: 18px; height: 18px;"></i>
+            ${userVoted ? 'Voted' : 'Vote Now'}
+          </button>
+        `;
+        
+        const voteBtn = card.querySelector('.enhanced-vote-btn');
+        if (!userVoted) {
+          voteBtn.onclick = () => {
+            voteBtn.disabled = true;
+            voteBtn.innerHTML = '<i data-lucide="loader-2" style="width: 18px; height: 18px; animation: spin 1s linear infinite;"></i> Voting...';
+            lucide.createIcons();
+            
+            setTimeout(() => {
+              const result = vote(c.id);
+              if (result.error) {
+                notification.innerHTML = `
+                  <div class="notification error" style="display: flex; align-items: center; gap: 0.75rem; animation: slideIn 0.3s ease;">
+                    <i data-lucide="x-circle" style="width: 20px; height: 20px;"></i>
+                    <span>${result.error}</span>
+                  </div>
+                `;
+                voteBtn.disabled = false;
+                voteBtn.innerHTML = '<i data-lucide="check-circle" style="width: 18px; height: 18px;"></i> Vote Now';
+              } else {
+                notification.innerHTML = `
+                  <div class="notification success" style="display: flex; align-items: center; gap: 0.75rem; animation: slideIn 0.3s ease;">
+                    <i data-lucide="check-circle" style="width: 20px; height: 20px;"></i>
+                    <span>🎉 Vote recorded successfully!</span>
+                  </div>
+                `;
+                setTimeout(() => {
+                  renderCandidates();
+                }, 1000);
+              }
+              lucide.createIcons();
+            }, 800);
+          };
+        }
+        
         candidateGrid.appendChild(card);
       });
+      
+      lucide.createIcons();
     }
+    
     renderCandidates();
     document.getElementById('logoutBtn').onclick = logout;
-    document.getElementById('refresh-candidates').onclick = renderCandidates;
+    document.getElementById('refresh-candidates').onclick = () => {
+      renderCandidates();
+      notification.innerHTML = `
+        <div class="notification info" style="display: flex; align-items: center; gap: 0.75rem; animation: slideIn 0.3s ease;">
+          <i data-lucide="refresh-cw" style="width: 20px; height: 20px;"></i>
+          <span>Candidates list refreshed</span>
+        </div>
+      `;
+      lucide.createIcons();
+      setTimeout(() => {
+        notification.innerHTML = '';
+      }, 2000);
+    };
   </script>
+  <style>
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
 </body>
 </html>
