@@ -6,13 +6,11 @@ import { resolve } from 'path'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 5174,
+    port: 4000,
     open: true
   },
   build: {
     outDir: 'dist',
     sourcemap: true
   },
-  root: '.',
-  publicDir: 'public'
 })

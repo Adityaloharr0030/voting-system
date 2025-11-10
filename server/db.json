@@ -1,10 +1,18 @@
 {
   "users": [
     {
-      "id": "1",
+      "id": "2",
+      "username": "testuser1",
+      "email": "t@t.com",
+      "password": "$2a$10$VhFuz6Oz0CwKGm/E5YL9WuxaBEHzrNl2eG6UbvvVV0wuZJqKmt6zq",
+      "role": "voter",
+      "hasVoted": true
+    },
+    {
+      "id": "2",
       "username": "admin",
       "email": "admin@example.com",
-      "password": "$2a$10$gaq8livC52vzACU4LfeVaemFnfD0ghwvoxLFF/cnvQQfPZHfDlzOm",
+      "password": "$2a$10$6XHcQveFPPy03KpuwRcUled0xnE1Dqr4rcgIkM2Uz9nY2WbOzHr0G",
       "role": "admin",
       "hasVoted": false
     }
@@ -24,7 +32,19 @@
       "id": "3",
       "name": "Carol",
       "party": "Independent"
+    },
+    {
+      "id": "4",
+      "name": "aditya",
+      "party": "d"
     }
   ],
-  "votes": []
+  "votes": [
+    {
+      "id": "1",
+      "userId": "2",
+      "candidateId": "1",
+      "votedAt": "2025-11-10T06:59:40.881Z"
+    }
+  ]
 }

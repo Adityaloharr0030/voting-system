@@ -9,7 +9,7 @@ const path = require('path')
 
 const app = express()
 const port = process.env.PORT || 4000
-const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret'
+const JWT_SECRET = process.env.JWT_SECRET
 
 app.use(cors())
 app.use(express.json())
@@ -113,8 +113,8 @@ app.post('/api/voting/vote', authMiddleware, async (req, res) => {
 
 app.get('/api/results', async (req, res) => {
   const db = readDb()
-  const counts = {}
-  (db.candidates || []).forEach(c => counts[c.id] = 0)
+  const counts = {};
+  (db.candidates || []).forEach(c => counts[c.id] = 0);
   (db.votes || []).forEach(v => { counts[v.candidateId] = (counts[v.candidateId] || 0) + 1 })
   const out = (db.candidates || []).map(c => ({ id: c.id, name: c.name, votes: counts[c.id] || 0 }))
   res.json(out)
