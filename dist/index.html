@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VoteHub — Vote</title>
+  <link rel="stylesheet" crossorigin href="/assets/index-DzjcxguX.css">
+</head>
+<body class="bg-900">
+  <main class="site-main">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent animate-gradient-flow bg-300%">Choose Your Candidate</h2>
+      <p class="text-xl muted">Select a candidate to cast your vote</p>
+    </div>
+    <div class="auth-card">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-2xl font-semibold"><i class="fas fa-users me-2 text-blue-400"></i>Candidates</h3>
+        <button id="refresh-candidates" class="btn-primary">Refresh</button>
+      </div>
+      <div id="candidate-grid" class="candidate-grid"></div>
+      <div id="notification" class="mt-4"></div>
+      <div class="flex items-center justify-between mt-6">
+        <a href="results.html" class="btn-secondary">View Results</a>
+        <a href="admin.html" class="btn-primary">Admin Panel</a>
+        <button class="btn-secondary" id="logoutBtn">Logout</button>
+      </div>
+    </div>
+  </main>
+  <script>
+    function getItem(key, fallback) {
+      try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
+    }
+    function setItem(key, val) {
+      try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
+    }
+    function vote(candidateId) {
+      const session = getItem('LS_SESSION', null);
+      if (!session) return { error: 'Not logged in' };
+      const users = getItem('LS_USERS', []);
+      const user = users.find(u => u.id === session.userId);
+      if (!user) return { error: 'User not found' };
+      if (user.hasVoted) return { error: 'Already voted' };
+      user.hasVoted = true;
+      setItem('LS_USERS', users);
+      const votes = getItem('LS_VOTES', []);
+      votes.push({ userId: user.id, candidateId, ts: Date.now() });
+      setItem('LS_VOTES', votes);
+      return { success: true };
+    }
+    function getCandidates() { return getItem('LS_CANDIDATES', []); }
+    function getSession() { return getItem('LS_SESSION', null); }
+    function logout() { localStorage.removeItem('LS_SESSION'); window.location = 'login.html'; }
+    const candidateGrid = document.getElementById('candidate-grid');
+    const notification = document.getElementById('notification');
+    const session = getSession();
+    if (!session) window.location = 'login.html';
+    function renderCandidates() {
+      candidateGrid.innerHTML = '';
+      const candidates = getCandidates();
+      candidates.forEach(c => {
+        const card = document.createElement('div');
+        card.className = 'candidate-card';
+        card.innerHTML = `<div class='candidate-avatar'>${c.name[0]}</div>
+          <div class='candidate-name'>${c.name}</div>
+          <button class='vote-btn'>Vote</button>`;
+        card.querySelector('.vote-btn').onclick = () => {
+          const result = vote(c.id);
+          if (result.error) {
+            notification.textContent = result.error;
+            notification.className = 'notification error';
+          } else {
+            notification.textContent = 'Vote recorded!';
+            notification.className = 'notification success';
+            renderCandidates();
+          }
+        };
+        candidateGrid.appendChild(card);
+      });
+    }
+    renderCandidates();
+    document.getElementById('logoutBtn').onclick = logout;
+    document.getElementById('refresh-candidates').onclick = renderCandidates;
+  </script>
+</body>
+</html>
