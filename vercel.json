@@ -1,0 +1,17 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/login", "destination": "/login.html" },
+    { "source": "/register", "destination": "/register.html" },
+    { "source": "/results", "destination": "/results.html" },
+    { "source": "/admin-dashboard", "destination": "/admin-dashboard.html" },
+    { "source": "/admin-api", "destination": "/admin-api.html" },
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/frontend", "destination": "/frontend.html" },
+    { "source": "/data", "destination": "/data.html" },
+    { "source": "/autoseed", "destination": "/autoseed.html" }
+  ]
+}
