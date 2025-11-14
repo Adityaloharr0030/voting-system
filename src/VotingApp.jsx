@@ -16,7 +16,7 @@ const MOCK_CANDIDATES = [
 let MOCK_RESULTS = MOCK_CANDIDATES.map(c => ({ ...c, votes: 0 }))
 
 function VotingApp() {
-  const [token, setToken] = useState(localStorage.getItem('token'))
+  const [token, setToken] = useState(localStorage.getItem('token') || null)
   const [candidates, setCandidates] = useState([])
   const [results, setResults] = useState([])
   const [loading, setLoading] = useState(false)
@@ -25,6 +25,15 @@ function VotingApp() {
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
   const pollRef = useRef(null)
+
+  // Auto-login with mock mode on mount
+  useEffect(() => {
+    if (!token && USE_MOCK) {
+      const mockToken = 'mock-token-' + Date.now()
+      localStorage.setItem('token', mockToken)
+      setToken(mockToken)
+    }
+  }, [])
 
   useEffect(() => {
     if (token) fetchCandidates()
