@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoteHub — Register to Vote</title>
+  <link rel="stylesheet" href="stl.css" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .auth-wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+    .auth-container {
+      max-width: 520px;
+      width: 100%;
+    }
+    .logo-section {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    .logo-icon {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 1.5rem;
+      background: linear-gradient(135deg, #10b981, #06b6d4);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 40px rgba(16,185,129,0.3);
+      animation: bounceSubtle 2s ease infinite;
+    }
+    .welcome-text {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #10b981, #06b6d4, #3b82f6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 0.5rem;
+      animation: gradientFlow 3s ease infinite;
+      background-size: 200% 200%;
+    }
+    .subtitle-text {
+      color: #9aa4b2;
+      font-size: 1rem;
+    }
+    .form-group {
+      margin-bottom: 1.25rem;
+      position: relative;
+    }
+    .form-label {
+      display: block;
+      color: #eef2f7;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+    .input-wrapper {
+      position: relative;
+    }
+    .input-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9aa4b2;
+      pointer-events: none;
+    }
+    .form-input-enhanced {
+      width: 100%;
+      padding: 0.9rem 1rem 0.9rem 3rem;
+      border-radius: 0.9rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      color: inherit;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+    .form-input-enhanced::placeholder {
+      color: rgba(238,242,247,0.4);
+    }
+    .form-input-enhanced:focus {
+      outline: none;
+      border-color: rgba(16,185,129,0.9);
+      background: rgba(255,255,255,0.05);
+      box-shadow: 0 8px 28px rgba(16,185,129,0.15);
+      transform: translateY(-2px);
+    }
+    .btn-large {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.05rem;
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 2rem 0;
+      color: #9aa4b2;
+      font-size: 0.9rem;
+    }
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .divider span {
+      padding: 0 1rem;
+    }
+    .login-prompt {
+      text-align: center;
+      padding: 1.5rem;
+      background: rgba(255,255,255,0.02);
+      border-radius: 1rem;
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+    .login-prompt p {
+      color: #9aa4b2;
+      margin-bottom: 1rem;
+    }
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: rgba(16,185,129,0.05);
+      border-radius: 1rem;
+      border: 1px solid rgba(16,185,129,0.1);
+    }
+    .benefit-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    .benefit-icon {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #10b981, #06b6d4);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .benefit-text h4 {
+      color: #eef2f7;
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin: 0 0 0.25rem 0;
+    }
+    .benefit-text p {
+      color: #9aa4b2;
+      font-size: 0.85rem;
+      margin: 0;
+    }
+  </style>
+</head>
+<body class="bg-900">
+  <div class="auth-wrapper">
+    <div class="auth-container">
+      <!-- Logo Section -->
+      <div class="logo-section">
+        <div class="logo-icon">
+          <i data-lucide="user-plus" style="width: 50px; height: 50px; color: white;"></i>
+        </div>
+        <h1 class="welcome-text">Join VoteHub!</h1>
+        <p class="subtitle-text">Create your account and start making a difference</p>
+      </div>
+
+      <!-- Register Card -->
+      <div class="auth-card">
+        <form id="registerForm" aria-label="Register Form">
+          <div class="form-group">
+            <label class="form-label" for="name">Full Name</label>
+            <div class="input-wrapper">
+              <i data-lucide="user" class="input-icon" style="width: 20px; height: 20px;"></i>
+              <input class="form-input-enhanced" type="text" id="name" placeholder="John Doe" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="email">Email Address</label>
+            <div class="input-wrapper">
+              <i data-lucide="mail" class="input-icon" style="width: 20px; height: 20px;"></i>
+              <input class="form-input-enhanced" type="email" id="email" placeholder="your.email@example.com" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <div class="input-wrapper">
+              <i data-lucide="lock" class="input-icon" style="width: 20px; height: 20px;"></i>
+              <input class="form-input-enhanced" type="password" id="password" placeholder="Create a secure password" required minlength="6" />
+            </div>
+            <small style="color: #9aa4b2; font-size: 0.8rem; margin-top: 0.25rem; display: block;">Minimum 6 characters</small>
+          </div>
+
+          <div id="errorBanner" class="notification error" style="display:none; margin-bottom: 1rem;"></div>
+
+          <button class="btn-secondary btn-large" type="submit" id="registerBtn">
+            <i data-lucide="check-circle" style="width: 20px; height: 20px;"></i>
+            Create Account
+          </button>
+        </form>
+
+        <div class="benefits-grid">
+          <div class="benefit-item">
+            <div class="benefit-icon">
+              <i data-lucide="vote" style="width: 18px; height: 18px; color: white;"></i>
+            </div>
+            <div class="benefit-text">
+              <h4>Cast Your Vote</h4>
+              <p>Participate in democratic decision-making</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">
+              <i data-lucide="bar-chart-3" style="width: 18px; height: 18px; color: white;"></i>
+            </div>
+            <div class="benefit-text">
+              <h4>Track Results</h4>
+              <p>View live voting results in real-time</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">
+              <i data-lucide="shield" style="width: 18px; height: 18px; color: white;"></i>
+            </div>
+            <div class="benefit-text">
+              <h4>Secure Platform</h4>
+              <p>Your vote is protected and confidential</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider">
+        <span>Already have an account?</span>
+      </div>
+
+      <!-- Login Prompt -->
+      <div class="login-prompt">
+        <p>Sign in to cast your vote</p>
+        <a href="login.html" class="btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem;">
+          <i data-lucide="log-in" style="width: 18px; height: 18px;"></i>
+          Login
+        </a>
+      </div>
+    </div>
+  </div>
+  <script>
+    function getItem(key, fallback) {
+      try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
+    }
+    function setItem(key, val) {
+      try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
+    }
+    function hash(str) {
+      let h = 0; for (let i = 0; i < str.length; i++) h = ((h<<5)-h)+str.charCodeAt(i); return h.toString();
+    }
+    function normalize(str) { return str.trim().toLowerCase(); }
+    function register({ name, email, password }) {
+      const users = getItem('LS_USERS', []);
+      if (users.some(u => normalize(u.email) === normalize(email))) return { error: 'Email already registered' };
+      const id = Date.now().toString();
+      const user = { id, name, email: normalize(email), passwordHash: hash(password), hasVoted: false };
+      users.push(user); setItem('LS_USERS', users);
+      setItem('LS_SESSION', { userId: id, createdAt: Date.now() });
+      return { user };
+    }
+    const form = document.getElementById('registerForm');
+    const errorBanner = document.getElementById('errorBanner');
+    const registerBtn = document.getElementById('registerBtn');
+    
+    // Initialize Lucide icons
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+    
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      registerBtn.disabled = true;
+      registerBtn.innerHTML = '<i data-lucide="loader-2" style="width: 20px; height: 20px; animation: spin 1s linear infinite;"></i> Creating Account...';
+      errorBanner.style.display = 'none';
+      
+      const name = form.name.value;
+      const email = form.email.value;
+      const password = form.password.value;
+      
+      // Validate password length
+      if (password.length < 6) {
+        errorBanner.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <i data-lucide="alert-circle" style="width: 20px; height: 20px;"></i>
+            <span>Password must be at least 6 characters</span>
+          </div>
+        `;
+        errorBanner.style.display = 'block';
+        registerBtn.disabled = false;
+        registerBtn.innerHTML = '<i data-lucide="check-circle" style="width: 20px; height: 20px;"></i> Create Account';
+        lucide.createIcons();
+        return;
+      }
+      
+      // Simulate a slight delay for better UX
+      setTimeout(() => {
+        const result = register({ name, email, password });
+        if (result.error) {
+          errorBanner.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <i data-lucide="alert-circle" style="width: 20px; height: 20px;"></i>
+              <span>${result.error}</span>
+            </div>
+          `;
+          errorBanner.style.display = 'block';
+          registerBtn.disabled = false;
+          registerBtn.innerHTML = '<i data-lucide="check-circle" style="width: 20px; height: 20px;"></i> Create Account';
+          lucide.createIcons();
+        } else {
+          registerBtn.innerHTML = '<i data-lucide="check-circle" style="width: 20px; height: 20px;"></i> Success! Redirecting...';
+          setTimeout(() => {
+            window.location = 'index.html';
+          }, 500);
+        }
+      }, 600);
+    });
+  </script>
+  <style>
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</body>
+</html>

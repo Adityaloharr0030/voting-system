@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VoteHub — Admin Panel</title>
+  <link rel="stylesheet" crossorigin href="/assets/stl-D4jZR053.css">
+</head>
+<body class="bg-900">
+  <main class="site-main">
+    <div class="auth-card max-w-4xl mx-auto">
+      <h2 class="text-3xl font-bold mb-4 text-center bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent animate-gradient-flow bg-300%">Admin Panel</h2>
+      <form id="addCandidateForm" class="flex items-center gap-4 mb-6">
+        <input class="form-input" type="text" id="candidateName" placeholder="Candidate Name" required />
+        <button class="btn-primary" type="submit">Add Candidate</button>
+      </form>
+      <div class="candidate-grid" id="adminCandidateList"></div>
+      <button class="btn-secondary mt-4" id="resetElectionBtn">Reset Election</button>
+      <div id="notification" class="mt-4"></div>
+      <div class="mt-6 text-center">
+        <a href="index.html" class="btn-primary">Back to Vote</a>
+      </div>
+    </div>
+  </main>
+  <script>
+    function getItem(key, fallback) {
+      try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
+    }
+    function setItem(key, val) {
+      try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
+    }
+    function isAdmin() {
+      const admin = getItem('LS_ADMIN', null);
+      const session = getItem('LS_SESSION', null);
+      return admin && session && admin.userId === session.userId && admin.isAdmin;
+    }
+    function getCandidates() { return getItem('LS_CANDIDATES', []); }
+    function addCandidate(name) {
+      const candidates = getCandidates();
+      const id = Date.now().toString();
+      candidates.push({ id, name });
+      setItem('LS_CANDIDATES', candidates);
+    }
+    function deleteCandidate(id) {
+      const candidates = getCandidates().filter(c => c.id !== id);
+      setItem('LS_CANDIDATES', candidates);
+    }
+    function resetElection(preserveUsers = true) {
+      setItem('LS_CANDIDATES', []);
+      setItem('LS_VOTES', []);
+      if (!preserveUsers) setItem('LS_USERS', []);
+    }
+    const form = document.getElementById('addCandidateForm');
+    const grid = document.getElementById('adminCandidateList');
+    const notification = document.getElementById('notification');
+    if (!isAdmin()) window.location = 'login.html';
+    function renderList() {
+      grid.innerHTML = '';
+      getCandidates().forEach(c => {
+        const card = document.createElement('div');
+        card.className = 'candidate-card';
+        card.innerHTML = `<div class='candidate-avatar'>${c.name[0]}</div>
+          <div class='candidate-name'>${c.name}</div>
+          <button class='btn-secondary' data-id='${c.id}'>Delete</button>`;
+        card.querySelector('button').onclick = function() {
+          deleteCandidate(c.id);
+          renderList();
+        };
+        grid.appendChild(card);
+      });
+    }
+    form.onsubmit = function(e) {
+      e.preventDefault();
+      addCandidate(form.candidateName.value);
+      form.candidateName.value = '';
+      renderList();
+    };
+    document.getElementById('resetElectionBtn').onclick = function() {
+      if (confirm('Reset election? This will clear all votes and candidates.')) {
+        resetElection(true);
+        renderList();
+        notification.textContent = 'Election reset.';
+        notification.className = 'notification info';
+      }
+    };
+    renderList();
+  </script>
+</body>
+</html>

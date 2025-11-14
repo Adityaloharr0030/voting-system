@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoteHub — Enterprise Admin Dashboard</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/adminDashboard-CeJIFniQ.css">
+  <link rel="stylesheet" crossorigin href="/assets/stl-D4jZR053.css">
+</head>
+<body class="bg-900">
+  <div class="dashboard-container">
+    <div class="dashboard-header">
+      <h1 class="header-title">🎯 Enterprise Admin Dashboard</h1>
+      <p class="subtitle">Comprehensive Election Management & Analytics</p>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="switchTab('overview')">
+        <i data-lucide="layout-dashboard"></i> Overview
+      </button>
+      <button class="nav-tab" onclick="switchTab('voters')">
+        <i data-lucide="users"></i> Voters
+      </button>
+      <button class="nav-tab" onclick="switchTab('audit')">
+        <i data-lucide="file-text"></i> Audit Trail
+      </button>
+      <button class="nav-tab" onclick="switchTab('communications')">
+        <i data-lucide="mail"></i> Communications
+      </button>
+      <button class="nav-tab" onclick="switchTab('security')">
+        <i data-lucide="shield"></i> Security
+      </button>
+      <button class="nav-tab" onclick="switchTab('reports')">
+        <i data-lucide="bar-chart-2"></i> Reports
+      </button>
+    </div>
+
+    <!-- Overview Tab -->
+    <div id="tab-overview" class="tab-content active">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon"><i data-lucide="users"></i></div>
+          <div class="stat-value" id="stat-total-voters">0</div>
+          <div class="stat-label">Total Registered Voters</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i data-lucide="check-circle"></i></div>
+          <div class="stat-value" id="stat-voted">0</div>
+          <div class="stat-label">Votes Cast</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i data-lucide="trending-up"></i></div>
+          <div class="stat-value" id="stat-turnout">0%</div>
+          <div class="stat-label">Voter Turnout</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i data-lucide="user-check"></i></div>
+          <div class="stat-value" id="stat-candidates">0</div>
+          <div class="stat-label">Candidates</div>
+        </div>
+      </div>
+
+      <div class="content-card">
+        <div class="card-header">
+          <h2 class="card-title"><i data-lucide="activity"></i> Recent Activity</h2>
+          <button class="btn-primary small" onclick="refreshActivity()">
+            <i data-lucide="refresh-cw"></i> Refresh
+          </button>
+        </div>
+        <div id="activity-log"></div>
+      </div>
+    </div>
+
+    <!-- Voters Tab -->
+    <div id="tab-voters" class="tab-content">
+      <div class="content-card">
+        <div class="card-header">
+          <h2 class="card-title"><i data-lucide="users"></i> Registered Voters</h2>
+          <button class="btn-secondary small" onclick="exportVoters()">
+            <i data-lucide="download"></i> Export CSV
+          </button>
+        </div>
+        <div class="search-box">
+          <i data-lucide="search" class="search-icon"></i>
+          <input type="text" id="voter-search" placeholder="Search voters..." oninput="filterVoters()" />
+        </div>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Registered</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="voters-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Audit Trail Tab -->
+    <div id="tab-audit" class="tab-content">
+      <div class="content-card">
+        <div class="card-header">
+          <h2 class="card-title"><i data-lucide="file-text"></i> System Audit Trail</h2>
+          <button class="btn-secondary small" onclick="exportAuditLog()">
+            <i data-lucide="download"></i> Export Log
+          </button>
+        </div>
+        <div id="audit-trail"></div>
+      </div>
+    </div>
+
+    <!-- Communications Tab -->
+    <div id="tab-communications" class="tab-content">
+      <div class="content-card">
+        <div class="card-header">
+          <h2 class="card-title"><i data-lucide="mail"></i> Send Notifications</h2>
+        </div>
+        <form id="notification-form">
+          <div class="form-group">
+            <label>Recipient Group</label>
+            <select class="form-input" id="recipient-group">
+              <option value="all">All Registered Voters</option>
+              <option value="voted">Voters Who Have Voted</option>
+              <option value="not-voted">Voters Who Haven't Voted</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Subject</label>
+            <input type="text" class="form-input" id="email-subject" placeholder="Enter email subject" required />
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea class="form-input" id="email-message" rows="5" placeholder="Enter your message..." required></textarea>
+          </div>
+          <button type="submit" class="btn-primary full-width">
+            <i data-lucide="send"></i> Send Notification
+          </button>
+        </form>
+        <div class="card-header" style="margin-top: 2rem;">
+          <h3 class="card-title small"><i data-lucide="history"></i> Sent Communications</h3>
+        </div>
+        <div id="communications-log"></div>
+      </div>
+    </div>
+
+    <!-- Security Tab -->
+    <div id="tab-security" class="tab-content">
+      <div class="stats-grid">
+        <div class="stat-card security">
+          <div class="stat-icon"><i data-lucide="shield-check"></i></div>
+          <div class="stat-value" id="stat-sessions">0</div>
+          <div class="stat-label">Active Sessions</div>
+        </div>
+        <div class="stat-card danger">
+          <div class="stat-icon"><i data-lucide="alert-triangle"></i></div>
+          <div class="stat-value" id="stat-failed">0</div>
+          <div class="stat-label">Failed Logins</div>
+        </div>
+        <div class="stat-card warning">
+          <div class="stat-icon"><i data-lucide="globe"></i></div>
+          <div class="stat-value" id="stat-ips">0</div>
+          <div class="stat-label">Unique IPs</div>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="card-header">
+          <h2 class="card-title"><i data-lucide="lock"></i> Security Logs</h2>
+        </div>
+        <div id="security-log"></div>
+      </div>
+    </div>
+
+    <!-- Reports Tab -->
+    <div id="tab-reports" class="tab-content">
+      <div class="content-card">
+        <div class="card-header">
+          <h2 class="card-title"><i data-lucide="bar-chart-2"></i> Generate Reports</h2>
+        </div>
+        <div class="reports-grid">
+          <button class="report-btn" onclick="generateReport('voters')">
+            <i data-lucide="users"></i>
+            <span>Voter Registration Report</span>
+          </button>
+          <button class="report-btn" onclick="generateReport('turnout')">
+            <i data-lucide="trending-up"></i>
+            <span>Turnout Analysis</span>
+          </button>
+          <button class="report-btn" onclick="generateReport('results')">
+            <i data-lucide="bar-chart-3"></i>
+            <span>Election Results</span>
+          </button>
+          <button class="report-btn" onclick="generateReport('audit')">
+            <i data-lucide="file-text"></i>
+            <span>Complete Audit Report</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Bar -->
+    <div class="action-bar">
+      <a href="index.html" class="btn-primary"><i data-lucide="arrow-left"></i> Back to Voting</a>
+      <a href="results.html" class="btn-secondary"><i data-lucide="bar-chart-3"></i> View Results</a>
+      <a href="admin-api.html" class="btn-primary"><i data-lucide="settings"></i> Manage Candidates</a>
+    </div>
+  </div>
+
+  <script src="admin-dashboard.js"></script>
+</body>
+</html>

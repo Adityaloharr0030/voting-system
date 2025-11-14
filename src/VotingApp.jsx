@@ -1,22 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 
-// Use mock data by default (no backend API)
-const USE_MOCK = true
-const API_BASE = '' // Not used in mock mode
+const API_BASE = import.meta.env.VITE_API_BASE || ''
 
-// Mock candidates - displayed on all devices
+// Mock data used when no API base is provided
 const MOCK_CANDIDATES = [
-  { id: '1', name: 'Alice Johnson', party: 'Party A' },
-  { id: '2', name: 'Bob Smith', party: 'Party B' },
-  { id: '3', name: 'Carol White', party: 'Party C' }
+  { id: '1', name: 'Alice' },
+  { id: '2', name: 'Bob' },
+  { id: '3', name: 'Carol' }
 ]
 
-// Mock results storage (in-memory, resets on page reload)
-let MOCK_RESULTS = MOCK_CANDIDATES.map(c => ({ ...c, votes: 0 }))
-
 function VotingApp() {
-  const [token, setToken] = useState(localStorage.getItem('token') || null)
+  const [token, setToken] = useState(localStorage.getItem('token'))
   const [candidates, setCandidates] = useState([])
   const [results, setResults] = useState([])
   const [loading, setLoading] = useState(false)
@@ -25,15 +20,6 @@ function VotingApp() {
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
   const pollRef = useRef(null)
-
-  // Auto-login with mock mode on mount
-  useEffect(() => {
-    if (!token && USE_MOCK) {
-      const mockToken = 'mock-token-auto-' + Date.now()
-      localStorage.setItem('token', mockToken)
-      setToken(mockToken)
-    }
-  }, [])
 
   useEffect(() => {
     if (token) fetchCandidates()
@@ -59,7 +45,7 @@ function VotingApp() {
   async function fetchCandidates() {
     setLoading(true)
     try {
-      if (USE_MOCK) {
+      if (!API_BASE) {
         // mock
         setCandidates(MOCK_CANDIDATES)
         return
@@ -77,9 +63,9 @@ function VotingApp() {
 
   async function fetchResults() {
     try {
-      if (USE_MOCK) {
-        // Use mock results from in-memory storage
-        setResults(MOCK_RESULTS)
+      if (!API_BASE) {
+        // derive mock results
+        setResults(MOCK_CANDIDATES.map(c => ({ ...c, votes: Math.floor(Math.random() * 100) })))
         return
       }
       const res = await axios.get(`${API_BASE}/results`)
@@ -91,14 +77,8 @@ function VotingApp() {
 
   async function vote(candidateId) {
     try {
-      if (USE_MOCK) {
-        // Update mock results
-        const result = MOCK_RESULTS.find(r => r.id === candidateId)
-        if (result) {
-          result.votes = (result.votes || 0) + 1
-          setResults([...MOCK_RESULTS])
-          alert('Vote cast for ' + result.name)
-        }
+      if (!API_BASE) {
+        alert('Mock vote recorded for candidate ' + candidateId)
         return
       }
       const res = await axios.post(`${API_BASE}/vote`, { candidateId }, {
@@ -114,7 +94,7 @@ function VotingApp() {
   async function handleAuth(e) {
     e.preventDefault()
     try {
-      if (USE_MOCK) {
+      if (!API_BASE) {
         // Mock auth: accept any credentials and set a dummy token
         const t = 'mock-token-' + Date.now()
         localStorage.setItem('token', t)
@@ -171,7 +151,7 @@ function VotingApp() {
               <button type="button" className="btn btn-link" onClick={() => setMode(mode === 'login' ? 'register' : 'login')}>{mode === 'login' ? 'Create an account' : 'Have an account? Login'}</button>
             </div>
           </form>
-          {USE_MOCK && <small className="text-muted">Running in mock mode (no API configured)</small>}
+          {!API_BASE && <small className="text-muted">Running in mock mode (no API configured)</small>}
         </div>
       ) : (
         <div>

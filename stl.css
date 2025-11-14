@@ -1,0 +1,133 @@
+/* VoteHub stylesheet: dark, animated, and self-contained.
+   Designed to work without Tailwind and without PostCSS features.
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+:root{
+  --bg-900: #0b1020;
+  --bg-800: #0f1724;
+  --bg-700: #111827;
+  --muted: #9aa4b2;
+  --surface: rgba(255,255,255,0.03);
+  --card: rgba(255,255,255,0.04);
+  --glass: rgba(255,255,255,0.06);
+  --accent-blue: #3b82f6; /* blue-500 */
+  --accent-purple: #7c3aed; /* purple-600 */
+  --accent-pink: #ec4899; /* pink-500 */
+  --success: #10b981;
+  --danger: #ef4444;
+  --trans: 250ms cubic-bezier(.2,.9,.3,1);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Roboto, system-ui, -apple-system, 'Segoe UI', sans-serif;background:linear-gradient(135deg,var(--bg-900) 0%, var(--bg-800) 60%, var(--bg-700) 100%);color:#eef2f7;}
+
+/* Decorative animated blobs (matching the HTML layout) */
+.bg-blobs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.bg-blob{position:absolute;border-radius:9999px;filter:blur(56px);opacity:.16;mix-blend-mode:screen}
+.bg-blob.b1{width:320px;height:320px;right:-40px;top:-40px;background:linear-gradient(135deg,var(--accent-purple),var(--accent-blue));animation:float 6s ease-in-out infinite}
+.bg-blob.b2{width:320px;height:320px;left:-40px;top:40%;background:linear-gradient(135deg,var(--accent-blue),#06b6d4);animation:float 6s ease-in-out infinite;animation-delay:2s}
+.bg-blob.b3{width:320px;height:320px;left:20%;bottom:-60px;background:linear-gradient(135deg,var(--accent-pink),var(--accent-purple));animation:float 6s ease-in-out infinite;animation-delay:4s}
+
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+/* Layout */
+nav.site-nav{position:sticky;top:0;z-index:30;background:rgba(255,255,255,0.04);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,0.04)}
+.nav-inner{max-width:1180px;margin:0 auto;padding:0.6rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem}
+.brand .logo{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--accent-blue),var(--accent-purple));box-shadow:0 4px 18px rgba(124,58,237,0.12)}
+.brand h1{font-size:1.25rem;margin:0;background:linear-gradient(90deg,var(--accent-blue),var(--accent-purple));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700}
+.nav-actions{display:flex;align-items:center;gap:.5rem}
+.nav-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);color:inherit;padding:.5rem .75rem;border-radius:.6rem;cursor:pointer;transition:transform var(--trans),background var(--trans),border-color var(--trans)}
+.nav-btn:hover{transform:translateY(-3px);background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.08)}
+
+/* Page container */
+main.site-main{position:relative;z-index:10;max-width:1180px;margin:2.25rem auto;padding:1rem}
+
+/* Utility classes used by HTML */
+.hidden{display:none}
+.text-center{text-align:center}
+.mb-12{margin-bottom:3rem}
+.mb-6{margin-bottom:1.5rem}
+.max-w-4xl{max-width:800px;margin-left:auto;margin-right:auto}
+
+/* Cards and form containers */
+.auth-card{background:var(--card);border-radius:1rem;padding:1.25rem;border:1px solid rgba(255,255,255,0.04);box-shadow:0 8px 24px rgba(2,6,23,0.6);transition:transform var(--trans),box-shadow var(--trans),border-color var(--trans)}
+.auth-card:hover{transform:translateY(-6px);border-color:rgba(124,58,237,0.18)}
+.auth-card .icon-wrap{width:64px;height:64px;border-radius:999px;display:flex;align-items:center;justify-content:center;margin:0 auto 0.75rem;background:linear-gradient(135deg,var(--accent-blue),var(--accent-purple));box-shadow:0 6px 18px rgba(59,130,246,0.08)}
+.auth-card h3{margin:.25rem 0 .5rem;font-size:1.125rem}
+.auth-card p{color:var(--muted);margin:0}
+
+/* Form inputs */
+.form-input{width:100%;padding:.85rem 1rem;border-radius:.9rem;background:transparent;border:1px solid rgba(255,255,255,0.06);color:inherit;transition:box-shadow var(--trans),transform var(--trans),border-color var(--trans)}
+.form-input::placeholder{color:rgba(238,242,247,0.45)}
+.form-input:focus{outline:none;border-color:rgba(59,130,246,0.9);box-shadow:0 8px 28px rgba(59,130,246,0.08);transform:translateY(-2px)}
+.error-message{color:var(--danger);font-size:.9rem;margin-top:.35rem;display:none}
+
+/* Buttons */
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;padding:.75rem 1rem;border-radius:999px;background:linear-gradient(90deg,var(--accent-blue),var(--accent-purple));color:#fff;border:none;font-weight:600;cursor:pointer;box-shadow:0 8px 28px rgba(59,130,246,0.12);transition:transform var(--trans),box-shadow var(--trans);}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(124,58,237,0.14)}
+.btn-secondary{display:inline-flex;align-items:center;justify-content:center;padding:.75rem 1rem;border-radius:999px;background:linear-gradient(90deg,#10b981,#06b6d4);color:#fff;border:none;font-weight:600;cursor:pointer;box-shadow:0 8px 26px rgba(6,182,212,0.08);transition:transform var(--trans)}
+
+/* Candidate grid */
+.candidate-grid{display:grid;grid-template-columns:repeat(1,1fr);gap:1rem}
+@media(min-width:768px){.candidate-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1024px){.candidate-grid{grid-template-columns:repeat(3,1fr)}}
+.candidate-card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:1rem;padding:1rem;border:1px solid rgba(255,255,255,0.04);display:flex;flex-direction:column;gap:.75rem;align-items:start;transition:transform var(--trans),box-shadow var(--trans),border-color var(--trans);cursor:pointer}
+.candidate-card:hover{transform:translateY(-6px);box-shadow:0 18px 60px rgba(2,6,23,0.6);border-color:rgba(59,130,246,0.12)}
+.candidate-avatar{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--accent-blue),var(--accent-purple));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.2rem;transition:transform .35s}
+.candidate-card:hover .candidate-avatar{transform:scale(1.08) rotate(4deg)}
+.candidate-name{font-weight:700}
+.candidate-desc{color:var(--muted);font-size:.95rem}
+.vote-btn{margin-left:auto;padding:.5rem .8rem;border-radius:.8rem;background:linear-gradient(90deg,var(--accent-blue),var(--accent-pink));color:#fff;border:none;cursor:pointer;font-weight:700}
+
+/* Results list */
+.results-list{display:flex;flex-direction:column;gap:.75rem}
+.result-row{display:flex;align-items:center;gap:.75rem}
+.result-meta{min-width:180px}
+.result-bar-wrap{flex:1;background:rgba(255,255,255,0.03);border-radius:999px;height:12px;overflow:hidden}
+.result-bar{height:100%;background:linear-gradient(90deg,var(--accent-blue),var(--accent-purple));width:0%;transition:width 900ms cubic-bezier(.2,.9,.3,1)}
+.results-timestamp{color:var(--muted);font-size:.9rem}
+
+/* Notification */
+.notification{position:fixed;right:1rem;top:4.5rem;z-index:60;padding:.8rem 1rem;border-radius:.8rem;background:linear-gradient(90deg,rgba(255,255,255,0.03),rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.04);color:inherit;box-shadow:0 10px 40px rgba(2,6,23,0.6);display:flex;gap:.6rem;align-items:center}
+.notification .icon{width:36px;height:36px;border-radius:.6rem;display:flex;align-items:center;justify-content:center}
+.notification.success{border-color:rgba(16,185,129,0.14);background:linear-gradient(90deg,rgba(16,185,129,0.06),rgba(16,185,129,0.03));color:#d8fff0}
+.notification.error{border-color:rgba(239,68,68,0.14);background:linear-gradient(90deg,rgba(239,68,68,0.06),rgba(239,68,68,0.03));color:#ffecec}
+.notification.info{border-color:rgba(59,130,246,0.14);background:linear-gradient(90deg,rgba(59,130,246,0.06),rgba(59,130,246,0.03));color:#eaf4ff}
+
+/* Small helpers */
+.muted{color:var(--muted)}
+.flex{display:flex}
+.items-center{align-items:center}
+.justify-between{justify-content:space-between}
+
+/* Animations referenced in HTML */
+@keyframes slideUp{0%{transform:translateY(30px);opacity:0}100%{transform:none;opacity:1}}
+@keyframes slideIn{0%{transform:translateX(-30px);opacity:0}100%{transform:none;opacity:1}}
+@keyframes bounceSubtle{0%,20%,50%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}60%{transform:translateY(-3px)}}
+@keyframes pulseGentle{0%,100%{opacity:1}50%{opacity:.75}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes voteSuccess{0%{transform:scale(1)}50%{transform:scale(1.06)}100%{transform:scale(1)}}
+@keyframes gradientFlow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+.animate-slide-up{animation:slideUp .5s ease-out both}
+.animate-slide-in{animation:slideIn .6s ease-out both}
+.animate-bounce-subtle{animation:bounceSubtle .7s ease both}
+.animate-pulse-gentle{animation:pulseGentle 2s ease-in-out infinite}
+.animate-shake{animation:shake .5s ease both}
+.animate-vote-success{animation:voteSuccess .8s ease both}
+.animate-gradient-flow{background-size:300% 300%;animation:gradientFlow 3s ease-in-out infinite}
+
+/* Responsive adjustments */
+@media(max-width:600px){.nav-inner{padding:0.6rem .75rem}.brand h1{font-size:1rem}.auth-card{padding:1rem}.candidate-avatar{width:56px;height:56px}.candidate-card{padding:.85rem}}
+
+/* Accessibility focus states */
+.btn-primary:focus,.btn-secondary:focus,.form-input:focus,.nav-btn:focus{outline:3px solid rgba(59,130,246,0.16);outline-offset:3px}
+
+/* Small utilities kept from original layout */
+.mb-4{margin-bottom:1.5rem}
+.mb-3{margin-bottom:1rem}
+.me-2{margin-right:.5rem}
+

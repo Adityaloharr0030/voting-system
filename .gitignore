@@ -1,12 +1,3 @@
 node_modules
 .vercel
 .env
-.env.local
-
-# Build artifacts and IDE
-**/target/
-*.jar
-*.class
-
-# Logs
-server/server_out.txt
