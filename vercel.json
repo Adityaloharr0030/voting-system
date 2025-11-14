@@ -3,7 +3,6 @@
   "outputDirectory": "dist",
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "${BACKEND_URL}/api/$1" },
     { "source": "/", "destination": "/index.html" },
     { "source": "/login", "destination": "/login.html" },
     { "source": "/register", "destination": "/register.html" },
@@ -14,8 +13,5 @@
     { "source": "/frontend", "destination": "/frontend.html" },
     { "source": "/data", "destination": "/data.html" },
     { "source": "/autoseed", "destination": "/autoseed.html" }
-  ],
-  "env": {
-    "BACKEND_URL": "@backend_url"
-  }
+  ]
 }
