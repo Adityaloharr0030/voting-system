@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 
-const API_BASE = import.meta.env.VITE_API_BASE || ''
+const API_BASE = import.meta.env.VITE_API_BASE ?? '/api'
+// Enable mock mode by setting VITE_USE_MOCK=true or by explicitly setting VITE_API_BASE to 'mock' or ''
+const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true' || API_BASE === '' || API_BASE === 'mock'
 
-// Mock data used when no API base is provided
+// Mock data used when no API base is provided or mock mode is enabled
 const MOCK_CANDIDATES = [
   { id: '1', name: 'Alice' },
   { id: '2', name: 'Bob' },
@@ -45,7 +47,7 @@ function VotingApp() {
   async function fetchCandidates() {
     setLoading(true)
     try {
-      if (!API_BASE) {
+      if (USE_MOCK) {
         // mock
         setCandidates(MOCK_CANDIDATES)
         return
@@ -63,7 +65,7 @@ function VotingApp() {
 
   async function fetchResults() {
     try {
-      if (!API_BASE) {
+      if (USE_MOCK) {
         // derive mock results
         setResults(MOCK_CANDIDATES.map(c => ({ ...c, votes: Math.floor(Math.random() * 100) })))
         return
@@ -77,7 +79,7 @@ function VotingApp() {
 
   async function vote(candidateId) {
     try {
-      if (!API_BASE) {
+      if (USE_MOCK) {
         alert('Mock vote recorded for candidate ' + candidateId)
         return
       }
@@ -94,7 +96,7 @@ function VotingApp() {
   async function handleAuth(e) {
     e.preventDefault()
     try {
-      if (!API_BASE) {
+      if (USE_MOCK) {
         // Mock auth: accept any credentials and set a dummy token
         const t = 'mock-token-' + Date.now()
         localStorage.setItem('token', t)
@@ -151,7 +153,7 @@ function VotingApp() {
               <button type="button" className="btn btn-link" onClick={() => setMode(mode === 'login' ? 'register' : 'login')}>{mode === 'login' ? 'Create an account' : 'Have an account? Login'}</button>
             </div>
           </form>
-          {!API_BASE && <small className="text-muted">Running in mock mode (no API configured)</small>}
+          {USE_MOCK && <small className="text-muted">Running in mock mode (no API configured)</small>}
         </div>
       ) : (
         <div>
