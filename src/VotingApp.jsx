@@ -29,7 +29,7 @@ function VotingApp() {
   // Auto-login with mock mode on mount
   useEffect(() => {
     if (!token && USE_MOCK) {
-      const mockToken = 'mock-token-' + Date.now()
+      const mockToken = 'mock-token-auto-' + Date.now()
       localStorage.setItem('token', mockToken)
       setToken(mockToken)
     }
