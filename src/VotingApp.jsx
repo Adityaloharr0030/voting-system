@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 
-const API_BASE = import.meta.env.VITE_API_BASE ?? '/api'
-// Enable mock mode by setting VITE_USE_MOCK=true or by explicitly setting VITE_API_BASE to 'mock' or ''
-const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true' || API_BASE === '' || API_BASE === 'mock'
+// Use mock data by default (no backend API)
+const USE_MOCK = true
+const API_BASE = '' // Not used in mock mode
 
-// Mock data used when no API base is provided or mock mode is enabled
+// Mock candidates - displayed on all devices
 const MOCK_CANDIDATES = [
-  { id: '1', name: 'Alice' },
-  { id: '2', name: 'Bob' },
-  { id: '3', name: 'Carol' }
+  { id: '1', name: 'Alice Johnson', party: 'Party A' },
+  { id: '2', name: 'Bob Smith', party: 'Party B' },
+  { id: '3', name: 'Carol White', party: 'Party C' }
 ]
+
+// Mock results storage (in-memory, resets on page reload)
+let MOCK_RESULTS = MOCK_CANDIDATES.map(c => ({ ...c, votes: 0 }))
 
 function VotingApp() {
   const [token, setToken] = useState(localStorage.getItem('token'))
@@ -66,8 +69,8 @@ function VotingApp() {
   async function fetchResults() {
     try {
       if (USE_MOCK) {
-        // derive mock results
-        setResults(MOCK_CANDIDATES.map(c => ({ ...c, votes: Math.floor(Math.random() * 100) })))
+        // Use mock results from in-memory storage
+        setResults(MOCK_RESULTS)
         return
       }
       const res = await axios.get(`${API_BASE}/results`)
@@ -80,7 +83,13 @@ function VotingApp() {
   async function vote(candidateId) {
     try {
       if (USE_MOCK) {
-        alert('Mock vote recorded for candidate ' + candidateId)
+        // Update mock results
+        const result = MOCK_RESULTS.find(r => r.id === candidateId)
+        if (result) {
+          result.votes = (result.votes || 0) + 1
+          setResults([...MOCK_RESULTS])
+          alert('Vote cast for ' + result.name)
+        }
         return
       }
       const res = await axios.post(`${API_BASE}/vote`, { candidateId }, {
