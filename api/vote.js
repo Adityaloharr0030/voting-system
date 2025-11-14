@@ -1,8 +1,7 @@
 // api/vote.js — Vercel serverless function for voting
 let votes = [];
-let users = {};
 
-export default function handler(req, res) {
+module.exports = (req, res) => {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -20,8 +19,8 @@ export default function handler(req, res) {
     }
     // In-memory mock: accept any vote
     votes.push({ userId: userId || 'anonymous', candidateId, timestamp: Date.now() });
-    res.json({ success: true, message: 'Vote recorded successfully' });
+    res.status(200).json({ success: true, message: 'Vote recorded successfully' });
   } else {
     res.status(405).json({ error: 'Method not allowed' });
   }
-}
+};

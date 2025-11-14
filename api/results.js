@@ -1,5 +1,4 @@
 // api/results.js — Vercel serverless function for vote results
-// In-memory mock results (will reset on each deployment)
 const mockCandidates = [
   { id: '1', name: 'Alice Johnson' },
   { id: '2', name: 'Bob Smith' },
@@ -8,7 +7,7 @@ const mockCandidates = [
 
 let votes = [];
 
-export default function handler(req, res) {
+module.exports = (req, res) => {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -26,8 +25,8 @@ export default function handler(req, res) {
       name: c.name,
       votes: votes.filter(v => v.candidateId === c.id).length
     }));
-    res.json(results);
+    res.status(200).json(results);
   } else {
     res.status(405).json({ error: 'Method not allowed' });
   }
-}
+};
